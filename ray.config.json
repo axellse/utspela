@@ -8,7 +8,7 @@
     }, 
     {
       "Tool" : "./utspela",
-      "Command" : ["-pf", "~/pf.json", "-p", "sox-mp3"],
+      "Command" : ["-pf", "/home/axell/pf.json", "-p", "sox-mp3"],
       "Type" : "deploy"
     }
   ]
