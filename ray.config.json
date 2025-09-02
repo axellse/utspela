@@ -8,8 +8,8 @@
       "Type" : "build"
     }, 
     {
-      "Tool" : "./utspela",
-      "Command" : ["-pf", "/home/axell/pf.json"],
+      "Tool" : "su",
+      "Command" : ["axell", "-c", "\"XDG_RUNTIME_DIR=/run/user/1000 ./utspela -pf /home/axell/pf.json\""],
       "Type" : "deploy"
     }
   ]
