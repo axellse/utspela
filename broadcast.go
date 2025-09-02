@@ -1,28 +1,32 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 	"os"
 	"time"
 )
 
 func PlayComponent(c BroadcastComponent) {
-	if c.Type == "file" {
+	switch c.Type {
+	case "file":
 		ba, ferr := os.ReadFile(c.MediaSource)
+		Info("Starting next broadcast segment at " + time.Now().Format(time.TimeOnly))
 		if ferr != nil {
-			fmt.Println("broadcast play failiure, skipping...")
+			Error("Could not read media file, skipping segment")
 			return
 		}
 		err := CurrentPlayer.Play(ba)
 		if err != nil {
-			fmt.Println("playback error, skipping...")
+			Error("Encountered playback error, skipping segment")
+			return
 		}
-	} else if c.Type == "rand" {
+	case "rand":
 		ci := rand.Intn(len(c.SubComponents) - 1)
 		comp := c.SubComponents[ci]
 		PlayComponent(comp)
 	}
+
+	Done("Broadcast segment complete at " + time.Now().Format(time.TimeOnly))
 }
 
 var BroadcastActive bool
@@ -32,13 +36,13 @@ func BeginBroadcast(b Broadcast) {
 		Info("A broadcast should begin now, but one is already airing, cancelling this one.")
 		return
 	}
-	Info("Starting broadcast on " + time.Now().Format(time.TimeOnly))
+	Info("Starting broadcast at " + time.Now().Format(time.TimeOnly))
 	BroadcastActive = true
 	for _, c := range b.Components {
 		PlayComponent(c)
 	}
 	BroadcastActive = false
-	Info("Broadcast complete on " + time.Now().Format(time.TimeOnly))
+	Done("Broadcast complete on " + time.Now().Format(time.TimeOnly))
 }
 
 func ListenForBroadcasts() {
